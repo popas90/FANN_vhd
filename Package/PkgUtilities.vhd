@@ -4,7 +4,7 @@ package PkgUtilities is
   type CoreOperation_t is (NoOperation, ForwardPass, BackwardPass);
   
   -- 8-bit natural type
-  type ShortInteger_t is range 0 to 255;
+  type ShortNatural_t is range 0 to 255;
   
   -- array of booleans
   type BooleanArray_t is array (natural range <>) of boolean;
