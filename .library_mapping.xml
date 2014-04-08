@@ -9,6 +9,7 @@
   <Mappings Location="Common Libraries/STD" Library="std"/>
   <Mappings Location="Common Libraries/unisim" Library="unisim"/>
   <Mappings Location="Core" Library="work"/>
+  <Mappings Location="Package/PkgComponents.vhd" Library="work"/>
   <Mappings Location="Package/PkgConfiguration.vhd" Library="work"/>
   <Mappings Location="Package/PkgUtilities.vhd" Library="work"/>
   <Mappings Location="Primitive" Library="work"/>

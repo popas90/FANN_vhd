@@ -5,19 +5,20 @@ use ieee.numeric_std.all;
 use work.PkgUtilities.all;
 
 package PkgConfiguration is
-  constant RAM_AddrWidth : integer := 2;
-  constant RAM_DataWidth : integer := 4;
-  type RAM_t is array (2 ** RAM_AddrWidth - 1 downto 0) of std_logic_vector(RAM_DataWidth - 1 downto 0);
 
-  constant NoOfNeurons : natural := 10;
+  type Dsp48Type_t is (DSP48A1, DSP48E1);
+  constant DspConfig_c : Dsp48Type_t := DSP48A1;
 
-  constant DataWidth : natural := 16;
+  constant NoOfNeurons_c : natural := 10;
 
-  type NoOfInputs_t is array (NoOfNeurons - 1 downto 0) of natural;
-  constant NoOfInputs : NoOfInputs_t := (2, 3, 5, 8, 10, 6, 7, 2, 9, 8);
+  constant DataWidth_c : natural := 16;
+  constant IdentWidth_c : natural := 16;
+  constant BramAddrWidth_c : natural := 9;
 
-  constant ValidStages : natural := 5;
+  type NoOfInputs_t is array (NoOfNeurons_c - 1 downto 0) of natural;
+  constant NoOfInputs_c : NoOfInputs_t := (2, 3, 5, 8, 10, 6, 7, 2, 9, 8);
 
+  constant Bram1BiasAddr_c : std_logic_vector (BramAddrWidth_c - 1 downto 0) := x"FFFF";
 --constant BRAM_ProcElem1 : RAM_t := ("0000", "0000", "0000", "0000");
 
 

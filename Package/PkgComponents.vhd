@@ -5,7 +5,9 @@ use ieee.numeric_std.all;
 use work.PkgConfiguration.all;
 use work.PkgUtilities.all;
 
-entity BRAM_DualPort_Init is
+package PkgComponents is
+
+  component BRAM_DualPort_Init is
   generic(
     BlockRamInitFile_g : string := "bram_init.txt"
   );
@@ -19,23 +21,10 @@ entity BRAM_DualPort_Init is
     DataOutA : out std_logic_vector(RamInit_DataWidth_c - 1 downto 0);
     DataOutB : out std_logic_vector(RamInit_DataWidth_c - 1 downto 0)
   );
-end entity BRAM_DualPort_Init;
+  end component BRAM_DualPort_Init;
+  
+end package PkgComponents;
 
-architecture RTL of BRAM_DualPort_Init is
-
-  signal Memory : RamInit_t := BlockRamInit_f(BlockRamInitFile_g);
-
-begin
-  process(Clk)
-  begin
-    if rising_edge(Clk) then
-      if (En = '1') then
-        if (WrEnA = '1') then
-          Memory(to_integer(AddrA)) <= to_bitvector(DataInA);
-        end if;
-        DataOutA <= to_stdlogicvector(Memory(to_integer(AddrA)));
-        DataOutB <= to_stdlogicvector(Memory(to_integer(AddrB)));
-      end if;
-    end if;
-  end process;
-end architecture RTL;
+package body PkgComponents is
+  
+end package body PkgComponents;
