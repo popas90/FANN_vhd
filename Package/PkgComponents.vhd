@@ -13,8 +13,8 @@ package PkgComponents is
   );
   port(
     Clk      : in  std_logic;
-    En       : in  std_logic;
-    WrEnA    : in  std_logic;
+    En       : in  boolean;
+    WrEnA    : in  boolean;
     AddrA    : in  unsigned(RamInit_AddrWidth_c - 1 downto 0);
     AddrB    : in  unsigned(RamInit_AddrWidth_c - 1 downto 0);
     DataInA  : in  std_logic_vector(RamInit_DataWidth_c - 1 downto 0);

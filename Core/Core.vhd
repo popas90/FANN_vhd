@@ -1,7 +1,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 use work.pkgconfiguration.all;
+use work.pkgcomponents.all;
 
 entity Core is
   port(
@@ -26,39 +28,44 @@ end entity Core;
 architecture RTL of Core is
 
   -- the DataReg is the data source for the D port
-  signal DataReg    : std_logic_vector(DataWidth_c - 1 downto 0);
+  signal DataReg    : std_logic_vector(DataWidth_c - 1 downto 0) := (others => '0');
   signal DataRegIn  : std_logic_vector(DataWidth_c - 1 downto 0);
   signal DataRegEn  : boolean;
   signal DataRegSel : std_logic;
 
   -- the BramAddrReg is used for computing the read addresses for the BRAMs
-  signal BramBaseReg    : std_logic_vector(BramAddrWidth_c - 3 downto 0);
-  signal BramBaseRegIn  : std_logic_vector(BramAddrWidth_c - 3 downto 0);
-  signal BramBaseRegEn  : boolean;
-  signal BramBaseRegSel : std_logic;
+  signal MemBaseReg    : std_logic_vector(WeightsMemoryAddrWidth_c - 1 downto 0) := (others => '0');
+  signal MemBaseRegIn  : std_logic_vector(WeightsMemoryAddrWidth_c - 1 downto 0);
+  signal MemBaseRegEn  : boolean;
+  signal MemBaseRegSel : std_logic;
 
-  -- actual read address ports for BRAM1 and BRAM2
-  signal Bram1RdAddr : std_logic_vector(BramAddrWidth_c - 1 downto 0);
-  signal Bram2RdAddr : std_logic_vector(BramAddrWidth_c - 1 downto 0);
+  -- actual read address ports for BRAM1 (coeffs) and BRAM2 (weights)
+  signal CoeffsMemRdAddr : std_logic_vector(CoeffsMemoryAddrWidth_c - 1 downto 0);
+  signal WeightsMemRdAddr : std_logic_vector(WeightsMemoryAddrWidth_c - 1 downto 0);
 
   -- selector for BRAM1 read address:
   --      - "00" - a
   --      - "01" - f(a)
-  --      - "11" - bias
-  signal Bram1RdAddrSel : std_logic_vector(1 downto 0);
+  --      - "10" - f'(a)
+  --      - "11" - 1/2*f"(a)
+  signal CoeffsMemAddrSel : std_logic_vector(CoeffsMemorySelWidth_c - 1 downto 0);
 
   -- selector for BRAM2 read address:
-  --      - "00" - f'(a)
-  --      - "01" - 1/2*f"(a)
-  --      - "11" - weights
-  signal Bram2RdAddrSel : std_logic_vector(1 downto 0);
+  -- signal WeightsMemRdAddrSel : std_logic_vector(1 downto 0);
 
   -- the output register from the DSP
   signal DspOutReg : std_logic_vector(47 downto 0);
+  
+  -- enable signals for the BRAM cores
+  signal CoeffsMemEn : boolean;
+  signal WeightsMemEn : boolean;
+
+  -- output busses from memories
+  signal CoeffsMemDataOut : std_logic_vector(DataWidth_c - 1 downto 0);
 
 begin
-  DataRegIn     <= DataIn when DataRegSel = '0' else DspOutReg(DataWidth_c - 1 downto 0);
-  BramBaseRegIn <= IdentIn(BramAddrWidth_c - 3 downto 0) when BramBaseRegSel = '0' else DspOutReg(BramAddrWidth_c - 3 downto 0);
+  DataRegIn    <= DataIn when DataRegSel = '0' else DspOutReg(DataWidth_c - 1 downto 0);
+  MemBaseRegIn <= ((others => '0') & IdentIn) when MemBaseRegSel = '0' else ((others => '0') & DspOutReg(WeightsMemoryAddrWidth_c - CoeffsMemorySelWidth_c - 1 downto 0));
 
   DataRegister : process(Clk)
   begin
@@ -71,58 +78,38 @@ begin
     end if;
   end process;
 
-  BramBaseRegister : process(Clk)
+  MemoryBaseRegister : process(Clk)
   begin
     if rising_edge(Clk) then
       if Rst = '1' then
-        BramBaseReg <= (others => '0');
-      elsif BramBaseRegEn then
-        BramBaseReg <= BramBaseRegIn;
+        MemBaseReg <= (others => '0');
+      elsif MemBaseRegEn then
+        MemBaseReg <= MemBaseRegIn;
       end if;
     end if;
   end process;
 
-  -- BRAM1 data contents - interleaved a, f(a), and 
-  -- bias on locations ending with "11"
-  -- /----------\
-  -- |    a0    | => ..00
-  -- |----------|
-  -- |  f(a0)   | => ..01
-  -- |----------|
-  -- |----------|
-  -- |   bias   | => ..11
-  -- |----------|
-  -- |  [...]   |
-  -- |----------|
-  -- |   a31    | => ..00
-  -- |----------|
-  -- |  f(a31)  | => ..01
-  -- \----------/
+  -- CoeffsMemory - interleaved a, f(a),f'(a) and 1/2*f"(a)
+  -- configured as a read-only memory, single-port
 
-  Bram1RdAddr <= --Bram1BiasAddr_c when Bram1RdAddrSel = "11" else
-                 BramBaseReg & Bram1RdAddrSel;
+  CoeffsMemRdAddr <= MemBaseReg & CoeffsMemAddrSel;
+  
+  CoefficientsMemory: component BRAM_DualPort_Init
+    generic map(BlockRamInitFile_g => "dummy.txt")
+    port map(Clk      => Clk,
+             En       => CoeffsMemEn,
+             WrEnA    => false,
+             AddrA    => unsigned(CoeffsMemRdAddr),
+             AddrB    => (others => '0'),
+             DataInA  => (others => '0'),
+             DataOutA => CoeffsMemDataOut,
+             DataOutB => open);
 
-  -- BRAM2 data contents - interleaved f'(a), 1/2*f"(a) and weights
+  -- WeightsMemory - interleaved weights from different neurons
   -- the number of weights depends on the number of inputs
-  -- /----------\
-  -- |  f'(a0)  | => ..00
-  -- |----------|
-  -- |1/2f"(a0) | => ..01
-  -- |----------|
-  -- |----------|
-  -- | weight0  | => ..11
-  -- |----------|
-  -- |  [...]   |
-  -- |----------|
-  -- | f'(a31)  | => ..00
-  -- |----------|
-  -- |1/2f"(a31)| => ..01
-  -- |----------|
-  -- | weight31 | => ..11
-  -- |----------|
-  -- |  [...]   | => ..11
-  -- \----------/
-
-  Bram2RdAddr <= BramBaseReg & Bram2RdAddrSel;
+  -- the bias address for each neuron is set as constant
+  -- and is considered the last weight
+ 
+  WeightsMemRdAddr <= MemBaseReg; -- & Bram2RdAddrSel;
 
 end architecture RTL;

@@ -4,8 +4,6 @@
   <Mappings Location="Common Libraries/IEEE Synopsys" Library="ieee"/>
   <Mappings Location="" Library="not mapped"/>
   <Mappings Location="Common Libraries" Library="not mapped"/>
-  <Mappings Location="Common Libraries/unisim/primitive" Library="not mapped"/>
-  <Mappings Location="Common Libraries/unisim/secureip" Library="not mapped"/>
   <Mappings Location="Common Libraries/STD" Library="std"/>
   <Mappings Location="Common Libraries/unisim" Library="unisim"/>
   <Mappings Location="Core" Library="work"/>

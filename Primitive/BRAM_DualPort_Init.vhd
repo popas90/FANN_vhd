@@ -11,8 +11,8 @@ entity BRAM_DualPort_Init is
   );
   port(
     Clk      : in  std_logic;
-    En       : in  std_logic;
-    WrEnA    : in  std_logic;
+    En       : in  boolean;
+    WrEnA    : in  boolean;
     AddrA    : in  unsigned(RamInit_AddrWidth_c - 1 downto 0);
     AddrB    : in  unsigned(RamInit_AddrWidth_c - 1 downto 0);
     DataInA  : in  std_logic_vector(RamInit_DataWidth_c - 1 downto 0);
@@ -29,8 +29,8 @@ begin
   process(Clk)
   begin
     if rising_edge(Clk) then
-      if (En = '1') then
-        if (WrEnA = '1') then
+      if En then
+        if WrEnA then
           Memory(to_integer(AddrA)) <= to_bitvector(DataInA);
         end if;
         DataOutA <= to_stdlogicvector(Memory(to_integer(AddrA)));
