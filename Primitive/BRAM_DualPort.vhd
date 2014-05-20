@@ -25,6 +25,7 @@ architecture RTL of BRAM_DualPort is
 	signal Memory : BlockRAM_t;
 
 begin
+	-- vhdcomp BRAM_DualPort CoreX
 	process(Clk)
 	begin
 		if rising_edge(Clk) then
