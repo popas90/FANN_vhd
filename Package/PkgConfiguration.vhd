@@ -6,8 +6,8 @@ use work.PkgUtilities.all;
 
 package PkgConfiguration is
 
-  type Dsp48Type_t is (DSP48A1, DSP48E1);
-  constant DspConfig_c : Dsp48Type_t := DSP48A1;
+  type Dsp48Type_t is (DspBlock48A1, DspBlock48E1);
+  constant DspConfig_c : Dsp48Type_t := DspBlock48A1;
 
   constant NoOfNeurons_c : natural := 10;
 

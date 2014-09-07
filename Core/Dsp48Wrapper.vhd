@@ -1,8 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-Library UNISIM;
-use UNISIM.vcomponents.all;
+Library unisim;
+use unisim.vcomponents.all;
 
 use work.PkgConfiguration.all;
 
@@ -50,7 +50,7 @@ end entity Dsp48Wrapper;
 architecture RTL of Dsp48Wrapper is
   signal SyncRstLoc : std_ulogic;
 begin
-  Spartan6DSP : if DspType = DSP48A1 generate
+  Spartan6DSP : if DspType = DspBlock48A1 generate
     DSP48A1_inst : DSP48A1
       generic map(
         A0REG       => 1,               -- First stage A input pipeline register (0/1)

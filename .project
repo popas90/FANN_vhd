@@ -37,9 +37,14 @@
 			<locationURI>sigasiresource:/vhdl/93/STD</locationURI>
 		</link>
 		<link>
-			<name>Common Libraries/unisim</name>
+			<name>Common Libraries/readme.txt</name>
+			<type>1</type>
+			<locationURI>sigasiresource:/vhdl/readme.txt</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/unisims</name>
 			<type>2</type>
-			<location>C:/Xilinx/14.6/ISE_DS/ISE/vhdl/src/unisims</location>
+			<location>C:/Xilinx/14.7/ISE_DS/ISE/vhdl/src/unisims</location>
 		</link>
 	</linkedResources>
 </projectDescription>
