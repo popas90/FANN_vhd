@@ -34,12 +34,44 @@ architecture rtl of NeuronController is
   type NeuronFSM_t is (Idle, Lin1, Lin2, Lin3, Act1, Act2, Act3, Act4, Act5, Act6, Act7);
   signal CrState, NxState : NeuronFSM_t := Idle;
 
-  signal NoOfInputsReg       : std_logic_vector(15 downto 0);
-  signal CountReceivedReg : std_logic_vector(15 downto 0);
+  signal NoOfInputsReg    : std_logic_vector(15 downto 0) := (others => '0');
+  signal CountReceivedReg : unsigned(15 downto 0) := (others => '0');
+  signal CountReceivedDecrement : boolean;
+  signal CountReceivedLoad : boolean;
 
 begin
+  
+  -- Register expected number of data points to receive
+  process (Clk)
+  begin
+    if rising_edge(Clk) then
+      if (Rst = '1') then
+        NoOfInputsReg <= (others => '0');
+      else
+        if (SetNoOfInputs = '1') then
+          NoOfInputsReg <= NoOfInputs;
+        end if;
+      end if;
+    end if;
+  end process;
+  
+  -- Count data points received
+  process(Clk)
+  begin
+    if rising_edge (Clk) then
+      if (Rst = '1') then 
+        CountReceivedReg <= (others => '0')
+      else
+        if CountReceivedDecrement then
+          CountReceivedReg <= CountReceivedReg - 1;
+        elsif CountReceivedLoad then
+          CountReceivedReg <= NoOfInputsReg;
+        end if;
+      end if;
+    end if;
+  end process;
 
-  -- NeuronCore FSM --
+  -- FSM --
   Decision : process(Clk)
   begin
     NxState <= CrState;
@@ -59,7 +91,7 @@ begin
         NxState <= Lin3;
 
       when Lin3 =>
-        if (CountReceivedReg = 0) then
+        if (to_integer(CountReceivedReg) = 0) then
           NxState <= Act1;
         else
           NxState <= Idle;
@@ -100,11 +132,15 @@ begin
     end if;
   end process NextState;
 
-  Output: process (CrState)
+  Output : process(CrState)
   begin
-    case CrState is 
+    case CrState is
       when Idle =>
-        
+        ReadyForInput <= '1';
+        OutputValid   <= '0';
+        CountReceivedDecrement <= false;
+        CountReceivedLoad <= false;
+
       when Lin1 =>
         null;
       when Lin2 =>
@@ -127,8 +163,6 @@ begin
         null;
     end case;
   end process Output;
-    
-    
 
 end architecture rtl;
 	
