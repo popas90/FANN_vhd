@@ -8,68 +8,90 @@ entity NeuronController is
   port(
 
     -- Global clock signal
-    Clk           : in  std_logic;
+    Clk               : in  std_logic;
 
     -- Sync reset signal
-    Rst           : in  std_logic;
-
-    -- Enable flag for validating the NoOfInputs signal
-    SetNoOfInputs : in  std_logic;
-
-    -- Number of inputs expected before computing the activation fct
-    NoOfInputs    : in  std_logic_vector(15 downto 0);
+    Rst               : in  std_logic;
+    
+    -- Control signals
+    -- FIXME determine correct size
+    Control_in : in std_logic_vector(5 downto 0);
+    
+    -- Load port for the data input counter
+    NoOfInputs_in : in std_logic_vector(15 downto 0);
 
     -- Validates the input data. Used for counting inputs received
-    InputValid    : in  std_logic;
+    InputValid_in     : in  std_logic;
 
-    -- Output data is ready, after computing the activation fct
-    OutputValid   : out std_logic;
+    -- Output data is ready, after computing the activation function
+    OutputValid_out   : out std_logic;
 
     -- The neuron is ready to receive a new data point
-    ReadyForInput : out std_logic
+    ReadyForInput_out : out std_logic;
+
+    -- Flags going to DSP block
+    DspFlags_out      : out std_logic_vector
   );
 end entity NeuronController;
 
 architecture rtl of NeuronController is
-  type NeuronFSM_t is (Idle, Lin1, Lin2, Lin3, Act1, Act2, Act3, Act4, Act5, Act6, Act7);
+  type NeuronFSM_t is (Idle, Act1, Act2, Act3, Act4, Act5, Act6, Act7);
   signal CrState, NxState : NeuronFSM_t := Idle;
 
-  signal NoOfInputsReg    : std_logic_vector(15 downto 0) := (others => '0');
-  signal CountReceivedReg : unsigned(15 downto 0) := (others => '0');
-  signal CountReceivedDecrement : boolean;
-  signal CountReceivedLoad : boolean;
+  signal NoOfInputsReg : std_logic_vector(15 downto 0) := (others => '0');
+  signal ReadyForInput : std_logic;
+  
+  -- When in Linear stage, this signal keeps track of data validity
+  -- in all pipeline stages. The width must change according to the
+  -- number of pipeline stages used 
+  signal LinearValidChain : std_logic_vector(5 downto 0);
+  signal InputValidQual : std_logic;
+  signal SetNoOfInputs : std_logic;
+  signal CountInputsReg : std_logic_vector(15 downto 0) := (others => '0');
 
 begin
   
-  -- Register expected number of data points to receive
-  process (Clk)
+  ValidChain: process(Clk)
+  begin
+    if rising_edge(Clk) then
+      if (Rst = '1') then
+        LinearValidChain <= (others => '0');
+      elsif
+        LinearValidChain <= InputValidQual & LinearValidChain(LinearValidChain'left downto 1);
+      end if;
+    end if;
+  end process ValidChain;
+  
+  InputValidQual <= InputValid_in and ReadyForInput;
+  ReadyForInput_out <= ReadyForInput;
+
+  -- Store expected number of data points to receive
+  NumberOfInputs: process(Clk)
   begin
     if rising_edge(Clk) then
       if (Rst = '1') then
         NoOfInputsReg <= (others => '0');
-      else
-        if (SetNoOfInputs = '1') then
-          NoOfInputsReg <= NoOfInputs;
-        end if;
+      elsif (SetNoOfInputs = '1') then
+        -- load new value to the counter
+        -- like flushing the pipeline, because previous data is discarded
+          NoOfInputsReg <= NoOfInputs_in;
       end if;
     end if;
-  end process;
+  end process NumberOfInputs;
   
-  -- Count data points received
-  process(Clk)
+  -- Count received data points
+  CountInputs: process (Clk)
   begin
-    if rising_edge (Clk) then
-      if (Rst = '1') then 
-        CountReceivedReg <= (others => '0')
-      else
-        if CountReceivedDecrement then
-          CountReceivedReg <= CountReceivedReg - 1;
-        elsif CountReceivedLoad then
-          CountReceivedReg <= NoOfInputsReg;
-        end if;
-      end if;
+    if rising_edge(Clk) then
+      if (Rst = '1') then
+        CountInputsReg <= (others => '0');
+      elsif (LoadNoOfInputsToCount = '1') then
+        CountInputsReg <= NoOfInputsReg;
+      elsif (InputValidQual = '1') then
+        CountInputsReg <= std_logic_vector(unsigned(CountInputsReg) - 1);        
+      end if;  
     end if;
-  end process;
+  end process CountInputs;
 
   -- FSM --
   Decision : process(Clk)
@@ -78,20 +100,7 @@ begin
 
     case CrState is
       when Idle =>
-        if (InputValid = '1') then
-          NxState <= Lin1;
-        else
-          NxState <= Idle;
-        end if;
-
-      when Lin1 =>
-        NxState <= Lin2;
-
-      when Lin2 =>
-        NxState <= Lin3;
-
-      when Lin3 =>
-        if (to_integer(CountReceivedReg) = 0) then
+        if (NoOfInputsReg = (others => '0')) then
           NxState <= Act1;
         else
           NxState <= Idle;
@@ -136,17 +145,8 @@ begin
   begin
     case CrState is
       when Idle =>
-        ReadyForInput <= '1';
-        OutputValid   <= '0';
-        CountReceivedDecrement <= false;
-        CountReceivedLoad <= false;
-
-      when Lin1 =>
-        null;
-      when Lin2 =>
-        null;
-      when Lin3 =>
-        null;
+        ReadyForInput   <= '1';
+        OutputValid_out <= '0';
       when Act1 =>
         null;
       when Act2 =>

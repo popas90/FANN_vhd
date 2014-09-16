@@ -21,28 +21,23 @@ entity Dsp48Wrapper is
     Rst : in std_logic;
     
     -- Mode selector
-    OpMode : in std_logic_vector(7 downto 0);
+    -- FIXME reduce size to minimum needed to encode all operations
+    OpMode_in : in std_logic_vector(7 downto 0);
     
     -- Enable signals for DSP registers
-    EnaD : in std_logic;
-    EnaB : in std_logic;
-    EnaA : in std_logic;
-    EnaC : in std_logic;
-    EnaM : in std_logic;
-    EnaP : in std_logic;
-    --EnaOpMode : in std_logic;
-    
-    -- Reset signal for DSP registers
-    SyncRst : in std_logic;
+    -- ------------------------------
+    -- | A | B | C | D | M | P | Op |
+    -- ------------------------------
+    EnableRegs_in : in std_logic_vector(6 downto 0);
     
     -- Data in signals
-    DataInD : in std_logic_vector(17 downto 0);
-    DataInB : in std_logic_vector(17 downto 0);
-    DataInA : in std_logic_vector(17 downto 0);
-    DataInC : in std_logic_vector(47 downto 0);
+    DataD_in : in std_logic_vector(17 downto 0);
+    DataB_in : in std_logic_vector(17 downto 0);
+    DataA_in : in std_logic_vector(17 downto 0);
+    DataC_in : in std_logic_vector(47 downto 0);
     
     -- Data out signal
-    DataOutP : out std_logic_vector(47 downto 0)
+    DataP_out : out std_logic_vector(47 downto 0)
     
   );
 end entity Dsp48Wrapper;
