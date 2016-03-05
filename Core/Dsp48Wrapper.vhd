@@ -6,9 +6,9 @@ use unisim.vcomponents.all;
 
 use work.PkgConfiguration.all;
 
-entity Dsp48Wrapper is
+entity DspBlockWrapper is
   generic(
-    -- DspType: supported DSP48 type for the 
+    -- DspType: supported DSP48 type for the
     -- board in use. Set in PkgConfiguration.vhd
     DspType : Dsp48Type_t := DspConfig_c
   );
@@ -19,30 +19,30 @@ entity Dsp48Wrapper is
 
     -- Global sync reset signal
     Rst : in std_logic;
-    
+
     -- Mode selector
     -- FIXME reduce size to minimum needed to encode all operations
     OpMode_in : in std_logic_vector(7 downto 0);
-    
+
     -- Enable signals for DSP registers
     -- ------------------------------
     -- | A | B | C | D | M | P | Op |
     -- ------------------------------
     EnableRegs_in : in std_logic_vector(6 downto 0);
-    
+
     -- Data in signals
     DataD_in : in std_logic_vector(17 downto 0);
     DataB_in : in std_logic_vector(17 downto 0);
     DataA_in : in std_logic_vector(17 downto 0);
     DataC_in : in std_logic_vector(47 downto 0);
-    
+
     -- Data out signal
     DataP_out : out std_logic_vector(47 downto 0)
-    
-  );
-end entity Dsp48Wrapper;
 
-architecture RTL of Dsp48Wrapper is
+  );
+end entity DspBlockWrapper;
+
+architecture rtl of DspBlockWrapper is
   signal SyncRstLoc : std_ulogic;
 begin
   Spartan6DSP : if DspType = DspBlock48A1 generate
@@ -53,14 +53,14 @@ begin
         B0REG       => 1,               -- First stage B input pipeline register (0/1)
         B1REG       => 1,               -- Second stage B input pipeline register (0/1)
         CARRYINREG  => 0,               -- CARRYIN input pipeline register (0/1)
-        CARRYINSEL  => "OPMODE5",       -- Specify carry-in source, "CARRYIN" or "OPMODE5" 
+        CARRYINSEL  => "OPMODE5",       -- Specify carry-in source, "CARRYIN" or "OPMODE5"
         CARRYOUTREG => 0,               -- CARRYOUT output pipeline register (0/1)
         CREG        => 1,               -- C input pipeline register (0/1)
         DREG        => 1,               -- D pre-adder input pipeline register (0/1)
         MREG        => 1,               -- M pipeline register (0/1)
         OPMODEREG   => 0,               -- Enable=1/disable=0 OPMODE input pipeline registers
         PREG        => 1,               -- P output pipeline register (0/1)
-        RSTTYPE     => "SYNC"           -- Specify reset type, "SYNC" or "ASYNC" 
+        RSTTYPE     => "SYNC"           -- Specify reset type, "SYNC" or "ASYNC"
       )
       port map(
         -- Cascade Ports: 18-bit (each) output: Ports to cascade from one DSP48 to another
@@ -107,7 +107,7 @@ begin
       );
 
   end generate Spartan6DSP;
-  
+
   SyncRstLoc <= SyncRst or Rst;
 
-end architecture RTL;
+end architecture rtl;
