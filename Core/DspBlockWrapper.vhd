@@ -7,12 +7,11 @@ use unisim.vcomponents.all;
 use work.PkgConfiguration.all;
 
 entity DspBlockWrapper is
-  generic(
+  generic (
     -- DspType: supported DSP48 type for the
     -- board in use. Set in PkgConfiguration.vhd
-    DspType : Dsp48Type_t := DspConfig_c
-  );
-  port(
+    DspType : Dsp48Type_t := DspConfig_c);
+  port (
 
     -- Global clock signal
     Clk : in std_logic;
@@ -37,9 +36,7 @@ entity DspBlockWrapper is
     DataC_in : in std_logic_vector(47 downto 0);
 
     -- Data out signal
-    DataP_out : out std_logic_vector(47 downto 0)
-
-  );
+    DataP_out : out std_logic_vector(47 downto 0));
 end entity DspBlockWrapper;
 
 architecture rtl of DspBlockWrapper is

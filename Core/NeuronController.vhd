@@ -12,11 +12,11 @@ entity NeuronController is
 
     -- Sync reset signal
     Rst               : in  std_logic;
-    
+
     -- Control signals
     -- FIXME determine correct size
     Control_in : in std_logic_vector(5 downto 0);
-    
+
     -- Load port for the data input counter
     NoOfInputs_in : in std_logic_vector(15 downto 0);
 
@@ -40,17 +40,17 @@ architecture rtl of NeuronController is
 
   signal NoOfInputsReg : std_logic_vector(15 downto 0) := (others => '0');
   signal ReadyForInput : std_logic;
-  
+
   -- When in Linear stage, this signal keeps track of data validity
   -- in all pipeline stages. The width must change according to the
-  -- number of pipeline stages used 
+  -- number of pipeline stages used
   signal LinearValidChain : std_logic_vector(5 downto 0);
   signal InputValidQual : std_logic;
   signal SetNoOfInputs : std_logic;
   signal CountInputsReg : std_logic_vector(15 downto 0) := (others => '0');
 
 begin
-  
+
   ValidChain: process(Clk)
   begin
     if rising_edge(Clk) then
@@ -61,7 +61,7 @@ begin
       end if;
     end if;
   end process ValidChain;
-  
+
   InputValidQual <= InputValid_in and ReadyForInput;
   ReadyForInput_out <= ReadyForInput;
 
@@ -78,7 +78,7 @@ begin
       end if;
     end if;
   end process NumberOfInputs;
-  
+
   -- Count received data points
   CountInputs: process (Clk)
   begin
@@ -88,8 +88,8 @@ begin
       elsif (LoadNoOfInputsToCount = '1') then
         CountInputsReg <= NoOfInputsReg;
       elsif (InputValidQual = '1') then
-        CountInputsReg <= std_logic_vector(unsigned(CountInputsReg) - 1);        
-      end if;  
+        CountInputsReg <= std_logic_vector(unsigned(CountInputsReg) - 1);
+      end if;
     end if;
   end process CountInputs;
 
@@ -128,7 +128,7 @@ begin
         NxState <= Idle;
 
     end case;
-  end process NextState;
+  end process Decision;
 
   NextState : process(Clk)
   begin
@@ -165,4 +165,3 @@ begin
   end process Output;
 
 end architecture rtl;
-	
