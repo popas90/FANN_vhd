@@ -23,6 +23,10 @@ package PkgUtilities is
   -- reads FILE and returns BRAM contents
   impure function BlockRamInit_f(FileName : in string) return RamInit_t;
 
+  -- conversion functions
+  function to_boolean(input : std_logic) return boolean;
+  function to_stdLogic(input : boolean) return std_logic;
+
 end package PkgUtilities;
 
 package body PkgUtilities is
@@ -36,6 +40,22 @@ package body PkgUtilities is
       read(LineName, RamName(i));
     end loop;
     return RamName;
+  end function;
+
+  function to_boolean(input : std_logic) return boolean is
+  begin
+    if input = '1' then
+      return true;
+    end if;
+    return false;
+  end function;
+
+  function to_stdLogic(input : boolean) return std_logic is
+  begin
+    if input then
+      return '1';
+    end if;
+    return '0';
   end function;
 
 end package body PkgUtilities;

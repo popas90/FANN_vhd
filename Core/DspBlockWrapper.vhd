@@ -99,7 +99,7 @@ begin
         RSTCARRYIN => '0',              -- 1-bit input: reset input for CARRYIN pipeline registers
         RSTD       => SyncRstLoc,       -- 1-bit input: reset input for D pipeline registers
         RSTM       => SyncRstLoc,       -- 1-bit input: reset input for M pipeline registers
-        RSTOPMODE  => SyncRstLoc,              -- 1-bit input: reset input for OPMODE pipeline registers
+        RSTOPMODE  => SyncRstLoc,       -- 1-bit input: reset input for OPMODE pipeline registers
         RSTP       => SyncRstLoc        -- 1-bit input: reset input for P pipeline registers
       );
 
