@@ -14,6 +14,7 @@ end entity ShiftRegister;
 architecture rtl of ShiftRegister is
   signal DataReg : std_logic_vector(Length_g - 1 downto 0) := (others => '0');
 begin
+  
   Shift: process (Clk)
   begin
     if rising_edge(Clk) then

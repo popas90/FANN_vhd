@@ -22,9 +22,27 @@ package PkgComponents is
     DataOutB : out std_logic_vector(RamInit_DataWidth_c - 1 downto 0)
   );
   end component BRAM_DualPort_Init;
-  
+
+  component ShiftRegister is
+    generic (
+      Length_g : natural := 16);
+    port (
+      Clk      : in  std_logic;
+      Data_in  : in  std_logic;
+      Data_out : out std_logic);
+  end component ShiftRegister;
+
+  component ShiftRegisterBool is
+    generic (
+      Length_g : natural := 16);
+    port (
+      Clk      : in  std_logic;
+      Data_in  : in  boolean;
+      Data_out : out boolean);
+  end component ShiftRegisterBool;
+
 end package PkgComponents;
 
 package body PkgComponents is
-  
+
 end package body PkgComponents;
