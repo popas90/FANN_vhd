@@ -15,7 +15,7 @@ entity SyncResetCtrl is
 end entity SyncResetCtrl;
 
 architecture rtl of SyncResetCtrl is
-  signal Q1, Q2, Q3 : std_logic := '1'
+  signal Q1, Q2, Q3 : std_logic := '1';
 begin
 
   -- Use a chain of three FFs, all intialized to '1', so the reset starts
