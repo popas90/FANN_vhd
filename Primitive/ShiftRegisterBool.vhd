@@ -14,6 +14,7 @@ end entity ShiftRegisterBool;
 architecture rtl of ShiftRegisterBool is
   signal DataReg : BooleanArray_t(Length_g - 1 downto 0) := (others => false);
 begin
+
   Shift: process (Clk)
   begin
     if rising_edge(Clk) then

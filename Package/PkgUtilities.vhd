@@ -18,7 +18,7 @@ package PkgUtilities is
   -- block memory type
   constant RamInit_AddrWidth_c : integer := 9;
   constant RamInit_DataWidth_c : integer := 16;
-  -- this is equivalent to the one-line declaration, but it avoids a GHDL warning
+  -- this is equivalent to the one-line declaration of RamInit_t, but it avoids a GHDL warning
   type Mem_t is array (integer range <>) of bit_vector(RamInit_DataWidth_c - 1 downto 0);
   subtype RamInit_t is Mem_t(0 to (2 ** RamInit_AddrWidth_c - 1));
   --type RamInit_t is array ((2 ** RamInit_AddrWidth_c) - 1 downto 0) of bit_vector(RamInit_DataWidth_c - 1 downto 0);
