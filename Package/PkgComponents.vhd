@@ -2,7 +2,6 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.PkgConfiguration.all;
 use work.PkgUtilities.all;
 
 package PkgComponents is
@@ -40,6 +39,12 @@ package PkgComponents is
       Data_in  : in  boolean;
       Data_out : out boolean);
   end component ShiftRegisterBool;
+
+  component SyncResetCtrl is
+    port (
+      Clk     : in  std_logic;
+      SyncRst : out boolean);
+  end component SyncResetCtrl;
 
 end package PkgComponents;
 
