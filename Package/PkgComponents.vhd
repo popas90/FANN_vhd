@@ -47,7 +47,3 @@ package PkgComponents is
   end component SyncResetCtrl;
 
 end package PkgComponents;
-
-package body PkgComponents is
-
-end package body PkgComponents;

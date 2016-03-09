@@ -34,7 +34,7 @@ end package PkgUtilities;
 
 package body PkgUtilities is
   impure function BlockRamInit_f(FileName : in string) return RamInit_t is
-    FILE RamFile : text is in FileName;
+    file RamFile : text is in FileName;
     variable LineName : line;
     variable RamName  : RamInit_t;
   begin

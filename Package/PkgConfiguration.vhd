@@ -13,17 +13,17 @@ package PkgConfiguration is
 
   -- data width for the Core
   constant DataWidth_c : natural := RamInit_DataWidth_c;
-  
+
   -- determines the max number of inputs for the neurons,
   -- computed as 2**IdentWidth_c
   constant IdentWidth_c : natural := 4;
-  
+
   -- depths for coeffs and weights memories
   -- keep these equal !!!
   -- otherwise, MemBaseReg from Core must also change
   constant CoeffsMemoryAddrWidth_c : natural := RamInit_AddrWidth_c; -- 10 for K7
   constant WeightsMemoryAddrWidth_c : natural := RamInit_AddrWidth_c; -- 10 for K7
-  
+
   -- selectors for the interleaving mechanism
   -- the coeffs mem interleaves a, f(a), f'(a), 1/2*f"(a)
   constant CoeffsMemorySelWidth_c : natural := 2;
@@ -38,9 +38,4 @@ package PkgConfiguration is
 --constant Bram1BiasAddr_c : std_logic_vector (BramAddrWidth_c - 1 downto 0) := x"FFFF";
 --constant BRAM_ProcElem1 : RAM_t := ("0000", "0000", "0000", "0000");
 
-  
-
 end package PkgConfiguration;
-
-package body PkgConfiguration is
-end package body PkgConfiguration;
