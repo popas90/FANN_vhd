@@ -56,7 +56,7 @@ begin
     if rising_edge(Clk) then
       if (Rst = '1') then
         LinearValidChain <= (others => '0');
-      elsif
+      else
         LinearValidChain <= InputValidQual & LinearValidChain(LinearValidChain'left downto 1);
       end if;
     end if;
