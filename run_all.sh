@@ -1,7 +1,6 @@
 mkdir work
 cd work
-ghdl -i --work=unisim ../SimulationModels/unisims/*.vhd
-ghdl -i --work=unisim ../SimulationModels/unisims/primitive/*.vhd
+ghdl -i --work=unisim ../SimulationModels/*.vhd
 ghdl -i ../Core/*.vhd
 ghdl -i ../Package/*.vhd
 ghdl -i ../Primitive/*.vhd
