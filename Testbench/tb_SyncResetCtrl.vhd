@@ -26,6 +26,28 @@ begin
 
   MainProc: process
   begin
-    wait for ClkHalfPeriod_c * 20;
+
+    wait for ClkHalfPeriod_c;
+    assert SyncRst
+      report "SyncRst should be true."
+      severity error;
+
+    wait for ClkHalfPeriod_c;
+    assert SyncRst
+      report "SyncRst should be true."
+      severity error;
+
+    wait for ClkHalfPeriod_c*2;
+    assert SyncRst
+      report "SyncRst should be true."
+      severity error;
+
+    wait for ClkHalfPeriod_c*2;
+    assert not SyncRst
+      report "SyncRst should be false."
+      severity error;
+
+    report "TEST PASSED";
+    wait;
   end process;
 end architecture test;
