@@ -46,4 +46,14 @@ package PkgComponents is
       SyncRst : out boolean);
   end component SyncResetCtrl;
 
+  component LinearController is
+    generic (
+      NoOfInputs_g : ShortNatural_t := 4);
+    port (
+      Clk : in  std_logic;
+      SyncRst : in  boolean;
+      InputValid_in : in  boolean;
+      OutputValid_out : out boolean);
+  end component;
+
 end package PkgComponents;

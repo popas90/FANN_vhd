@@ -4,6 +4,7 @@ use ieee.numeric_std.all;
 
 use work.PkgConfiguration.all;
 use work.PkgComponents.all;
+use work.PkgUtilities.all;
 
 entity LinearController is
   generic (
@@ -11,13 +12,12 @@ entity LinearController is
   port (
     Clk : in  std_logic;
     SyncRst : in  boolean;
-
     InputValid_in : in  boolean;
     OutputValid_out : out boolean);
 end entity;
 
 architecture rtl of LinearController is
-  constant InputCnt : ShortNatural_t := 0;
+  signal InputCnt : ShortNatural_t := 0;
   signal ShiftRegOut, OutputValidLoc : boolean;
 begin
 

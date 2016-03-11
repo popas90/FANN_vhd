@@ -2,6 +2,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library work;
+use work.PkgUtilities.all;
+
 entity ShiftRegisterBool is
   generic (
     Length_g : natural := 16);
@@ -22,6 +25,6 @@ begin
     end if;
   end process Shift;
 
-  Data_out <= DataReg(Length_g);
+  Data_out <= DataReg(Length_g - 1);
 
 end architecture rtl;
