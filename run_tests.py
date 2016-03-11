@@ -14,19 +14,17 @@ def teardown_module():
     subprocess.run('./run_teardown.sh')
 
 
-def comp_run_tb_sim(tb_name):
+def compile_and_simulate_tb(tb_name):
     bash_cmd = 'cd work && ' + \
         'ghdl -m ' + tb_name + ' && ' + \
-        'ghdl -r ' + tb_name
-    return subprocess.run(bash_cmd, shell=True)
+        'ghdl -r ' + tb_name + ' --assert-level=error'
+    result = subprocess.run(bash_cmd,
+                            shell=True,
+                            universal_newlines=True,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT)
+    nose.tools.eq_(result.returncode, 0, 'TEST FAILED: ' + result.stdout)
 
 
 def test_tb_SyncResetCtrl():
-    print(comp_run_tb_sim('tb_SyncResetCtrl'))
-    print(nose.plugins.capture.Capture.buffer)
-    nose.tools.ok_("TEST PASSED" in str(nose.plugins.capture.Capture.buffer.fget()), "TEST FAILED")
-
-
-def test2():
-    print('test2')
-    nose.tools.eq_(2, 2)
+    compile_and_simulate_tb('tb_SyncResetCtrl')

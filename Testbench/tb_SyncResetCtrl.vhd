@@ -37,17 +37,17 @@ begin
       report "SyncRst should be true."
       severity error;
 
-    wait for ClkHalfPeriod_c*2;
+    wait for ClkHalfPeriod_c * 2;
     assert SyncRst
       report "SyncRst should be true."
       severity error;
 
-    wait for ClkHalfPeriod_c*2;
+    wait for ClkHalfPeriod_c * 2;
     assert not SyncRst
       report "SyncRst should be false."
       severity error;
 
-    wait for ClkHalfPeriod_c*2;
+    wait for ClkHalfPeriod_c * 2;
     report "TEST PASSED";
     StopSim <= true;
     wait;
