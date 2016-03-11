@@ -13,9 +13,9 @@ git:
 
 ##Install dependencies
 before_install:
-  - sudo add-apt-repository ppa:pgavin/ghdl
-  - sudo apt-get update
-  - sudo apt-get install ghdl
+  - sudo add-apt-repository ppa:pgavin/ghdl -y
+  - sudo apt-get update -qq
+  - sudo apt-get install ghdl -y
 install:
   - pip install -r requirements.txt
 ##Run tests
