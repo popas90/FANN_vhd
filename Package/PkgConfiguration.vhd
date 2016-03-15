@@ -11,13 +11,6 @@ package PkgConfiguration is
 
   constant NoOfNeurons_c : natural := 10;
 
-  -- data width for the Core
-  constant DataWidth_c : natural := RamInit_DataWidth_c;
-
-  -- determines the max number of inputs for the neurons,
-  -- computed as 2**IdentWidth_c
-  constant IdentWidth_c : natural := 4;
-
   -- depths for coeffs and weights memories
   -- keep these equal !!!
   -- otherwise, MemBaseReg from Core must also change

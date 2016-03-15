@@ -23,6 +23,19 @@ package PkgUtilities is
   subtype RamInit_t is Mem_t(0 to (2 ** RamInit_AddrWidth_c - 1));
   --type RamInit_t is array ((2 ** RamInit_AddrWidth_c) - 1 downto 0) of bit_vector(RamInit_DataWidth_c - 1 downto 0);
 
+  -- data width for the Core
+  constant DataWidth_c : natural := RamInit_DataWidth_c;
+
+  -- determines the max number of inputs for the neurons,
+  -- computed as 2**IdentWidth_c
+  constant IdentWidth_c : natural := 4;
+
+  -- message type exchanged between neurons
+  type NeuronData_t is record
+    Identifier : unsigned(IdentWidth_c - 1 downto 0);
+    Value : std_logic_vector(DataWidth_c - 1 downto 0);
+  end record NeuronData_t;
+
   -- reads FILE and returns BRAM contents
   impure function BlockRamInit_f(FileName : in string) return RamInit_t;
 

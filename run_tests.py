@@ -29,5 +29,6 @@ def compile_and_simulate_tb(tb_name):
 def test_tb_SyncResetCtrl():
     compile_and_simulate_tb('tb_SyncResetCtrl')
 
+
 def test_tb_LinearController():
     compile_and_simulate_tb('tb_LinearController')
