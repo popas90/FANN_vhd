@@ -10,7 +10,16 @@
   * __Axonul__ care transmite semnalele de ieșire către alți neuroni
  [http://cs.upm.ro/_users/calin.enachescu/Enachescu%20-%20Inteligenta%20artificiala/Curs/Cartea%20v21.pdf]
 
-Neuronii sunt interconectați prin intermediul unor legături numite *__sinapse__*, iar comunicarea se realizează prin intermediul unor semnale electrice numite *__impulsuri__*. Intervalul de timp dintre momentul emisiei unui semnal la soma neuronului pre-sinaptic şi momentul emisiei unui semnal indus de către neuronul post-sinaptic, este de aproximativ 1-2 msec. Comparativ cu un dispozitiv electronic artificial, acest interval de timp este de până la 6 ordine de mărime mai mare. Totuși, d.p.d.v. al puterii de calcul, sistemul biologic (creierul) este net superior oricărui sistem electronic, de unde se poate deduce că aceasta se obține prin interconectarea masivă a unui număr mare de elemente de procesare relativ lente (spre exemplu, creierul uman este alcătuit din aproximativ 10<sup>11</sup> neuroni, iar fiecare neuron este interconectat cu alți 10<sup>4</sup> neuroni).
+Neuronii sunt interconectați prin intermediul unor legături numite *__sinapse__*, iar comunicarea se realizează prin intermediul unor semnale electrice numite *__impulsuri__*. Fiecare sinapsă are o valoare de prag (*threshold*), care determină activarea sau inhibarea neuronului post-sinaptic. Acest nivel de activare se poate modifica și reprezintă un mecanism de învățare (memorare) biologic.
+
+Intervalul de timp dintre momentul emisiei unui semnal la soma neuronului pre-sinaptic şi momentul emisiei unui semnal indus de către neuronul post-sinaptic, este de aproximativ 1-2 msec. Comparativ cu un dispozitiv electronic artificial, acest interval de timp este de până la 6 ordine de mărime mai mare. Totuși, d.p.d.v. al puterii de calcul, sistemul biologic (creierul) este net superior oricărui sistem electronic, de unde se poate deduce că aceasta se obține prin interconectarea masivă a unui număr mare de elemente de procesare relativ lente (spre exemplu, creierul uman este alcătuit din aproximativ 10<sup>11</sup> neuroni, iar fiecare neuron este interconectat cu alți 10<sup>4</sup> neuroni).
+
+Într-o reţea neuronală artificială, unitatea analogă neuronului biologic este o unitate de procesare simplă, care va fi numit neuron artificial. Acesta are mai multe intrări, corespunzând arborelui dendritic, fiecare intrare fiind ponderată, asemenea valorii de prag a sinapsei biologice. Toate aceste produse se însumează, proces care reprezintă rolul somei din neuronul biologic:
+$$y = b + \sum_{i=1}^n x_i * w_i$$
+unde termenul *b* se numește *__bias__* și are valoare constantă, finnd folosit pentru ajustarea valorii de prag. Rezultatul obținut reprezintă argumentul *__funcției de activare__*, care va fi valoarea de ieșire a neuronului. Dintre cele mai utilizate funcții de activare, amintim:
+
+
+
 
 
 

@@ -46,5 +46,4 @@ begin
       DataOutA           => WeightsMemDataOut,
       DataOutB           => open);
 
-  m
 end architecture rtl;

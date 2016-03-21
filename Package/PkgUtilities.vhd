@@ -43,6 +43,10 @@ package PkgUtilities is
   function to_boolean(input : std_logic) return boolean;
   function to_stdLogic(input : boolean) return std_logic;
 
+  -- testbench utilities
+  procedure ClkWaitRising(signal Clk : std_logic; cycles : natural);
+  procedure ClkWaitFalling(signal Clk : std_logic; cycles : natural);
+
 end package PkgUtilities;
 
 package body PkgUtilities is
@@ -74,4 +78,17 @@ package body PkgUtilities is
     return '0';
   end function;
 
+  procedure ClkWaitRising(signal Clk : std_logic; cycles : natural) is
+  begin
+    for i in 1 to cycles loop
+      wait until rising_edge(Clk);
+    end loop;
+  end procedure;
+
+  procedure ClkWaitFalling(signal Clk : std_logic; cycles : natural) is
+  begin
+    for i in 1 to cycles loop
+      wait until falling_edge(Clk);
+    end loop;
+  end procedure;
 end package body PkgUtilities;

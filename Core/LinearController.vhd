@@ -8,7 +8,7 @@ use work.PkgUtilities.all;
 
 entity LinearController is
   generic (
-    NoOfInputs_g : ShortNatural_t := 4);
+    NoOfInputs_g : ShortNatural_t := 8);
   port (
     Clk : in  std_logic;
     SyncRst : in  boolean;
@@ -18,27 +18,39 @@ end entity;
 
 architecture rtl of LinearController is
   signal InputCnt : ShortNatural_t := 0;
-  signal ShiftRegOut, OutputValidLoc : boolean;
+  signal ShiftRegOut, ShiftRegOutDly : boolean := false;
+  signal OutputValidLoc : boolean;
 begin
 
   UpdateCount: process(Clk)
   begin
     if rising_edge(Clk) then
       if (SyncRst or OutputValidLoc) then
-        InputCnt <= 0;
-      elsif InputValid_in then
-        InputCnt <= InputCnt + 1;
+        InputCnt <= NoOfInputs_g;
+      elsif ShiftRegOut then
+        InputCnt <= InputCnt - 1;
       end if;
     end if;
   end process;
 
   EnableShiftReg: ShiftRegisterBool
     generic map (
-      Length_g => 5)
+      Length_g => 4)
     port map (
       Clk      => Clk,
       Data_in  => InputValid_in,
       Data_out => ShiftRegOut);
 
-OutputValidLoc <= ShiftRegOut and (InputCnt = NoOfInputs_g);
+  DelayShiftRegOut: process(Clk)
+  begin
+    if rising_edge(Clk) then
+      if SyncRst then
+        ShiftRegOutDly <= false;
+      else
+        ShiftRegOutDly <= ShiftRegOut;
+      end if;
+    end if;
+  end process;
+
+OutputValidLoc <= ShiftRegOutDly and (InputCnt = 0);
 end architecture rtl;
