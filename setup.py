@@ -14,7 +14,7 @@ setup(
     description="Add special switches in code, \
         based on options set when running tests",
     license='GNU LGPL',
-    url="https://github.com/kgrandis/nose-switch",
+    url="https://github.com/popas90/nose-switch",
     py_modules=['nose_switch'],
     zip_safe=False,
     entry_points={'nose.plugins': ['nose_switch = nose_switch:NoseSwitch']},
