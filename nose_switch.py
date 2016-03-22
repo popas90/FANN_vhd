@@ -15,7 +15,7 @@ class NoseSwitch(Plugin):
     def options(self, parser, env=os.environ):
         """Define the command line options for the plugin."""
         # super(NoseSwitch, self).options(parser, env)
-        parser.add_option("-s", "--switch",
+        parser.add_option("--switch",
                           action="append", dest="switch",
                           default=env.get('NOSE_SWITCH', False),
                           help="Add special switches in code, \
