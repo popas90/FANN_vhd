@@ -10,19 +10,19 @@ class NoseSwitch(Plugin):
 
     def __init__(self):
         Plugin.__init__(self)
-        self.attribs = []
+        self.switches = []
 
     def options(self, parser, env=os.environ):
         """Define the command line options for the plugin."""
-        # super(NoseSwitch, self).options(parser, env)
-        parser.add_option("--switch",
+        parser.add_option("-S", "--switch", type="string",
                           action="append", dest="switch",
-                          default=env.get('NOSE_SWITCH', False),
+                          metavar="SWITCH",
                           help="Add special switches in code, \
                                 based on options set when running tests.")
 
     def configure(self, options, config):
         if options.switch:
-            std_switch = tolist(options.switch)
-            print("switch: " + str(std_switch))
+            self.switches = tolist(options.switch)
+
+        if not self.switches:
             self.enabled = True
