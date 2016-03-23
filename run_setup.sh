@@ -1,4 +1,10 @@
 #!/bin/bash
+if [ -d "work" ]; then
+  cd work
+  rm -rf *
+  cd ..
+  rmdir work
+fi
 mkdir work
 cd work
 ghdl -i --work=unisim ../SimulationModels/*.vhd

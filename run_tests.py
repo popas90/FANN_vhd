@@ -17,7 +17,8 @@ def teardown_module():
 def compile_and_simulate_tb(tb_name):
     bash_cmd = 'cd work && ' + \
         'ghdl -m ' + tb_name + ' && ' + \
-        'ghdl -r ' + tb_name + ' --assert-level=error'
+        'ghdl -r ' + tb_name + \
+        ' --assert-level=error --wave=' + tb_name + '.ghw'
     result = subprocess.run(bash_cmd,
                             shell=True,
                             universal_newlines=True,

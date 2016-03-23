@@ -13,7 +13,8 @@ architecture test of tb_LinearController is
   constant ClkHalfPeriod_c : time := 10 ns;
   constant NoOfInputs : ShortNatural_t := 8;
   signal Clk : std_logic := '0';
-  signal SyncRst, InputValid, OutputValid : boolean := true;
+  signal SyncRst : boolean := true;
+  signal InputValid, OutputValid : boolean;
   signal OutputValidAll : boolean := false;
   signal StopSim : boolean := false;
   signal Cnt, CycleCnt : natural := 0;
@@ -41,7 +42,7 @@ begin
     InputValid <= true;
     ClkWaitRising(Clk, NoOfInputs);
     InputValid <= false;
-    ClkWaitRising(Clk, 6);
+    ClkWaitRising(Clk, 8);
 
     -- Make sure OutputValid was asserted at least once in the testbench run
     assert OutputValidAll
