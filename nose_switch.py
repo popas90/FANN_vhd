@@ -4,15 +4,17 @@ from nose.plugins import Plugin
 from nose.util import tolist
 
 log = logging.getLogger('nose.plugins.nose_switch')
-switches = []
 
 
 def switch_on(switch_string):
-    if switch_string in switches:
+    if switch_string in NoseSwitch.switches:
         return True
+    return False
 
 
 class NoseSwitch(Plugin):
+
+    switches = []
 
     def __init__(self):
         Plugin.__init__(self)
@@ -26,9 +28,10 @@ class NoseSwitch(Plugin):
                                 based on options set when running tests.")
 
     def configure(self, options, config):
-        global switches
+        sw_lst = []
         if options.switch:
-            switches = tolist(options.switch)
+            sw_lst = tolist(options.switch)
 
-        if not self.switches:
+        if sw_lst:
             self.enabled = True
+            NoseSwitch.switches += sw_lst
