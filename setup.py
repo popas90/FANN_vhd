@@ -2,11 +2,11 @@
 from distutils.core import setup
 
 
-VERSION = '0.1.2'
+VERSION = '0.1.3'
 
 setup(
     name="nose-switch",
-    packages=['nose-switch'],
+    packages=['nose_switch'],
     version=VERSION,
     author="Bogdan Popa",
     author_email="bogdititupopa@gmail.com",
@@ -16,7 +16,7 @@ setup(
     download_url="https://github.com/popas90/nose-switch/tarball/0.1.0",
     classifiers=[],
     py_modules=['nose_switch'],
-    entry_points={'nose.plugins': ['nose_switch = nose_switch:NoseSwitch']},
+    entry_points={'nose.plugins': ['nose_switch = nose_switch.nose_switch:NoseSwitch']},
     install_requires=['nose'],
     test_suite='tests',
 )
