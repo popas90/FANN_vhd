@@ -1,7 +1,7 @@
 import unittest
 import os
 import sys
-from nose_switch import NoseSwitch, switch_on
+from nose_switch.nose_switch import NoseSwitch, switch_on
 from nose.plugins import PluginTester
 
 sys.setrecursionlimit(1500)
