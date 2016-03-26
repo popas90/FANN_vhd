@@ -1,5 +1,6 @@
 import nose
 from nose import with_setup
+from nose_switch import *
 import subprocess
 import os
 
@@ -15,10 +16,17 @@ def teardown_module():
 
 
 def compile_and_simulate_tb(tb_name):
+    if nose_switch.switch_on("debug"):
+        # This allows the test to run all the way and not stop if an error
+        # is encountered. This is useful for debugging on waveforms
+        assert_level = 'failure'
+    else:
+        assert_level = 'error'
+
     bash_cmd = 'cd work && ' + \
         'ghdl -m ' + tb_name + ' && ' + \
         'ghdl -r ' + tb_name + \
-        ' --assert-level=error --wave=' + tb_name + '.ghw'
+        ' --assert-level=' + assert_level + ' --wave=' + tb_name + '.ghw'
     result = subprocess.run(bash_cmd,
                             shell=True,
                             universal_newlines=True,
