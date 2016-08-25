@@ -1,6 +1,5 @@
 import nose
-from nose import with_setup
-from nose_switch import *
+from nose_switch import nose_switch
 import subprocess
 import os
 
@@ -17,8 +16,8 @@ def teardown_module():
 
 def compile_and_simulate_tb(tb_name):
     if nose_switch.switch_on("debug"):
-        # This allows the test to run all the way and not stop if an error
-        # is encountered. This is useful for debugging on waveforms
+        # This allows the test to run all the way and not stop simulation if an
+        # error is encountered. This is useful for debugging on waveforms.
         assert_level = 'failure'
     else:
         assert_level = 'error'
