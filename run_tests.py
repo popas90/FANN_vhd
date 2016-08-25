@@ -10,8 +10,11 @@ def setup_module():
 
 
 def teardown_module():
-    os.chmod('./run_teardown.sh', 0o755)
-    subprocess.run('./run_teardown.sh')
+    # Run the cleanup script only for regular runs. The 'work' folder
+    # shouldn't be deleted when debugging.
+    if not nose_switch.switch_on("keep"):
+        os.chmod('./run_teardown.sh', 0o755)
+        subprocess.run('./run_teardown.sh')
 
 
 def compile_and_simulate_tb(tb_name):
