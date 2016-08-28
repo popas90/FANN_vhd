@@ -12,6 +12,7 @@ end entity tb_LinearController;
 architecture test of tb_LinearController is
   constant ClkHalfPeriod_c : time := 10 ns;
   constant NoOfInputs : ShortNatural_t := 8;
+  constant PipelineDly : ShortNatural_t := 4;
   signal Clk : std_logic := '0';
   signal SyncRst : boolean := true;
   signal InputValid, OutputValid : boolean;
@@ -24,7 +25,8 @@ begin
 
   DUT: LinearController
     generic map (
-      NoOfInputs_g => NoOfInputs)
+      NoOfInputs_g => NoOfInputs,
+      PipelineDly_g => PipelineDly)
     port map (
       Clk => Clk,
       SyncRst => SyncRst,
@@ -42,7 +44,17 @@ begin
     InputValid <= true;
     ClkWaitRising(Clk, NoOfInputs);
     InputValid <= false;
-    ClkWaitRising(Clk, 8);
+    ClkWaitRising(Clk, NoOfInputs);
+
+    -- Write all 8 elements in burst mode
+    for i in 1 to NoOfInputs loop
+      InputValid <= true;
+      ClkWaitRising(Clk, 1);
+      InputValid <= false;
+      ClkWaitRising(Clk, 1);
+    end loop;
+
+    ClkWaitRising(Clk, NoOfInputs);
 
     -- Make sure OutputValid was asserted at least once in the testbench run
     assert OutputValidAll

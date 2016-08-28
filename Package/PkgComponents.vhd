@@ -48,7 +48,8 @@ package PkgComponents is
 
   component LinearController is
     generic (
-      NoOfInputs_g : ShortNatural_t := 4);
+      NoOfInputs_g : ShortNatural_t := 8;
+      PipelineDly_g : ShortNatural_t := 4);
     port (
       Clk : in  std_logic;
       SyncRst : in  boolean;
